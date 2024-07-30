@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerAPI\\BookingSchedulerAPI.csproj": {}
+    "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerApi\\BookingSchedulerAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerAPI\\BookingSchedulerAPI.csproj": {
+    "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerApi\\BookingSchedulerAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerAPI\\BookingSchedulerAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerApi\\BookingSchedulerAPI.csproj",
         "projectName": "BookingSchedulerAPI",
-        "projectPath": "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerAPI\\BookingSchedulerAPI.csproj",
+        "projectPath": "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerApi\\BookingSchedulerAPI.csproj",
         "packagesPath": "C:\\Users\\Josh Sanon\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerAPI\\obj\\",
+        "outputPath": "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Josh Sanon\\AppData\\Roaming\\NuGet\\NuGet.Config"

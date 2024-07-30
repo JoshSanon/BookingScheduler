@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "p1g2bQpK3Q6b+JZ6k7OuApRL0LE2Q1Pgyv4yWn65vWgvx29e6AlDxgJhdQtG847ksiakFLk7C3VydVAyBLk9Qw==",
+  "dgSpecHash": "YlYTaTmmvHoksnC3e7apmXhHr6mfV1QCN7F1zQqKejwyrMvrARNVBGcKQ6hOloPdNqk5sTFSGTT9ye+6yfuOqw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerAPI\\BookingSchedulerAPI.csproj",
+  "projectFilePath": "C:\\Users\\Josh Sanon\\Desktop\\BookingScheduler\\BookingSchedulerApi\\BookingSchedulerAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Josh Sanon\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.7\\microsoft.aspnetcore.openapi.8.0.7.nupkg.sha512",
     "C:\\Users\\Josh Sanon\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",

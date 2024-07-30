@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "K+GtLDqZwexUvF52Uv3wYuqUDlANOykayivw9QCo0YQ=",
+  "Source": "BookingSchedulerAPI",
+  "BasePath": "_content/BookingSchedulerAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
