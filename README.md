@@ -15,12 +15,12 @@ Ensure you have the following installed on your development machine:
 - An HTTP client like Postman for testing
 
 ### Restore dependencies:
+Change directory to \BookingSchedulerApi 
 ```
 dotnet restore
 ```
 
 ## Running the Application
-Change directory to \BookingSchedulerApi 
 Build and run the application:
 ```
 dotnet run
