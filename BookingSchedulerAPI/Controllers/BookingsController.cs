@@ -5,7 +5,7 @@ namespace BookingScheduler.BookingSchedulerAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SettlementBookingsController : ControllerBase
+    public class BookingsController : ControllerBase
     {
         private static readonly List<Booking> Bookings = [];
         private const int MaxSimultaneousBookings = 4;
