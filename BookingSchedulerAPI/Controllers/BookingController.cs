@@ -44,6 +44,13 @@ namespace BookingScheduler.BookingSchedulerAPI.Controllers
             return Ok(response);
         }
 
+        //A GET Api endpoint which helps viewing the bookings made. Adding a little love to the project!
+        [HttpGet]
+        public IActionResult DisplayBooking()
+        {
+            return Ok(Bookings);
+        }
+
         //Helper method to Check if the booking times have overlapped. 
         //This accounts for the following case: 
         //booking starting at 9:00 (ends at 9:59) does not overlap with booking starting at 10:00.
