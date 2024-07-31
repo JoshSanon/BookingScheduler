@@ -132,3 +132,7 @@ Send the request and check the response.
 - Models/BookingResponse.cs: Model for booking response.
 - Models/Booking.cs: Model for storing Bookings in memory.
 - Properties/launchSettings.json: Configuration file for launch settings.
+
+## Project Constraints/ Assumptions
+- We assume bookings made are for the same day so we only consider the time and not date.
+- Bookings are stored in memory, so if the application is reset- the memory is lost.
