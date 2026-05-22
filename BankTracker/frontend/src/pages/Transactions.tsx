@@ -9,6 +9,7 @@ import { CATEGORIES } from '../types'
 
 export default function Transactions() {
   const queryClient = useQueryClient()
+  const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({
     category: '',
     search: '',
@@ -49,41 +50,58 @@ export default function Transactions() {
   const updateFilter = (key: string, value: string) =>
     setFilters((f) => ({ ...f, [key]: value, page: 1 }))
 
+  const clearFilters = () =>
+    setFilters({ category: '', search: '', from: '', to: '', accountId: '', direction: '', page: 1 })
+
+  const hasFilters = !!(filters.category || filters.search || filters.from || filters.to || filters.direction || filters.accountId)
+  const activeFilterCount = [filters.category, filters.search, filters.from, filters.to, filters.direction, filters.accountId].filter(Boolean).length
   const totalPages = Math.ceil((data?.total ?? 0) / 50)
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 sm:p-6 lg:p-8">
+      {/* Header */}
+      <div className="flex items-center justify-between gap-3 mb-4 sm:mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
-          <p className="text-gray-500 text-sm mt-0.5">{data?.total ?? 0} total transactions</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Transactions</h1>
+          <p className="text-gray-500 text-sm mt-0.5">{data?.total ?? 0} total</p>
         </div>
         <button
           onClick={() => categorizeMutation.mutate()}
           disabled={categorizeMutation.isPending}
-          className="flex items-center gap-2 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors disabled:opacity-40"
+          className="flex items-center gap-1.5 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors disabled:opacity-40"
         >
           <span>🤖</span>
-          {categorizeMutation.isPending ? 'Categorising...' : 'Re-categorise with AI'}
+          <span className="hidden sm:inline">
+            {categorizeMutation.isPending ? 'Categorising...' : 'Re-categorise with AI'}
+          </span>
+          <span className="sm:hidden">
+            {categorizeMutation.isPending ? '...' : 'AI'}
+          </span>
         </button>
       </div>
 
+      {categorizeMutation.isSuccess && (
+        <div className="mb-4 bg-green-50 border border-green-100 text-green-700 px-4 py-3 rounded-xl text-sm">
+          ✓ AI categorised {(categorizeMutation.data?.data as any)?.categorized ?? 0} transactions
+        </div>
+      )}
+
       {/* Summary bar */}
       {data && (
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-xl border border-gray-100 px-5 py-4">
-            <p className="text-xs text-gray-500 mb-1">Showing</p>
-            <p className="text-lg font-bold text-gray-900">{data.total} transactions</p>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
+          <div className="bg-white rounded-xl border border-gray-100 px-3 sm:px-5 py-3 sm:py-4">
+            <p className="text-xs text-gray-500 mb-0.5">Total</p>
+            <p className="text-sm sm:text-lg font-bold text-gray-900">{data.total}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 px-5 py-4">
-            <p className="text-xs text-gray-500 mb-1">Total Spent</p>
-            <p className="text-lg font-bold text-red-600">
+          <div className="bg-white rounded-xl border border-gray-100 px-3 sm:px-5 py-3 sm:py-4">
+            <p className="text-xs text-gray-500 mb-0.5">Spent</p>
+            <p className="text-sm sm:text-lg font-bold text-red-600">
               -${data.totalSpent.toLocaleString('en-AU', { minimumFractionDigits: 2 })}
             </p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 px-5 py-4">
-            <p className="text-xs text-gray-500 mb-1">Total Income</p>
-            <p className="text-lg font-bold text-green-600">
+          <div className="bg-white rounded-xl border border-gray-100 px-3 sm:px-5 py-3 sm:py-4">
+            <p className="text-xs text-gray-500 mb-0.5">Income</p>
+            <p className="text-sm sm:text-lg font-bold text-green-600">
               +${data.totalIncome.toLocaleString('en-AU', { minimumFractionDigits: 2 })}
             </p>
           </div>
@@ -91,69 +109,100 @@ export default function Transactions() {
       )}
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-4 mb-4 flex flex-wrap gap-3">
-        <input
-          type="text"
-          placeholder="🔍  Search transactions..."
-          value={filters.search}
-          onChange={(e) => updateFilter('search', e.target.value)}
-          className="flex-1 min-w-48 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-
-        <select
-          value={filters.category}
-          onChange={(e) => updateFilter('category', e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
-        >
-          <option value="">All categories</option>
-          {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
-
-        <select
-          value={filters.accountId}
-          onChange={(e) => updateFilter('accountId', e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
-        >
-          <option value="">All accounts</option>
-          {accounts?.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
-        </select>
-
-        <select
-          value={filters.direction}
-          onChange={(e) => updateFilter('direction', e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
-        >
-          <option value="">All types</option>
-          <option value="debit">Expenses</option>
-          <option value="credit">Income</option>
-        </select>
-
-        <input
-          type="date"
-          value={filters.from}
-          onChange={(e) => updateFilter('from', e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-        <input
-          type="date"
-          value={filters.to}
-          onChange={(e) => updateFilter('to', e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-
-        {(filters.category || filters.search || filters.from || filters.to || filters.direction || filters.accountId) && (
+      <div className="bg-white rounded-2xl border border-gray-100 p-3 sm:p-4 mb-4">
+        {/* Mobile: search + filter toggle */}
+        <div className="flex gap-2 lg:hidden mb-2">
+          <input
+            type="text"
+            placeholder="Search transactions..."
+            value={filters.search}
+            onChange={(e) => updateFilter('search', e.target.value)}
+            className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
           <button
-            onClick={() => setFilters({ category: '', search: '', from: '', to: '', accountId: '', direction: '', page: 1 })}
-            className="px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex items-center gap-1.5 px-3 py-2 border rounded-lg text-sm font-medium transition-colors ${
+              showFilters || hasFilters
+                ? 'bg-green-50 border-green-200 text-green-700'
+                : 'border-gray-200 text-gray-600'
+            }`}
           >
-            Clear filters
+            <span>⚙️</span>
+            {activeFilterCount > 0 && (
+              <span className="bg-green-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
           </button>
-        )}
+        </div>
+
+        {/* Mobile expandable filters */}
+        <div className={`${showFilters ? 'flex' : 'hidden'} lg:flex flex-wrap gap-2 sm:gap-3`}>
+          {/* Hidden on mobile — shown in row above */}
+          <input
+            type="text"
+            placeholder="Search transactions..."
+            value={filters.search}
+            onChange={(e) => updateFilter('search', e.target.value)}
+            className="hidden lg:block flex-1 min-w-48 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+
+          <select
+            value={filters.category}
+            onChange={(e) => updateFilter('category', e.target.value)}
+            className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white min-w-0"
+          >
+            <option value="">All categories</option>
+            {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+
+          <select
+            value={filters.accountId}
+            onChange={(e) => updateFilter('accountId', e.target.value)}
+            className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white min-w-0"
+          >
+            <option value="">All accounts</option>
+            {accounts?.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+          </select>
+
+          <select
+            value={filters.direction}
+            onChange={(e) => updateFilter('direction', e.target.value)}
+            className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+          >
+            <option value="">All types</option>
+            <option value="debit">Expenses</option>
+            <option value="credit">Income</option>
+          </select>
+
+          <input
+            type="date"
+            value={filters.from}
+            onChange={(e) => updateFilter('from', e.target.value)}
+            className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+          <input
+            type="date"
+            value={filters.to}
+            onChange={(e) => updateFilter('to', e.target.value)}
+            className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+
+          {hasFilters && (
+            <button
+              onClick={clearFilters}
+              className="px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Transaction table */}
+      {/* Transaction list */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="grid grid-cols-[1fr,160px,120px,100px] gap-4 px-5 py-3 border-b border-gray-50 text-xs font-semibold text-gray-400 uppercase tracking-wide">
+        {/* Desktop table header */}
+        <div className="hidden lg:grid grid-cols-[1fr,160px,130px,110px] gap-4 px-5 py-3 border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase tracking-wide">
           <span>Transaction</span>
           <span>Category</span>
           <span>Account</span>
@@ -162,48 +211,85 @@ export default function Transactions() {
 
         {isLoading ? (
           <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
-            Loading...
+            Loading transactions...
           </div>
         ) : !data?.transactions.length ? (
-          <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
-            No transactions found
+          <div className="flex flex-col items-center justify-center h-32 text-gray-400 text-sm gap-1">
+            <span>No transactions found</span>
+            {hasFilters && (
+              <button onClick={clearFilters} className="text-green-600 hover:underline text-xs">
+                Clear filters
+              </button>
+            )}
           </div>
         ) : (
-          data.transactions.map((tx) => (
-            <div
-              key={tx.id}
-              className="grid grid-cols-[1fr,160px,120px,100px] gap-4 px-5 py-3.5 border-b border-gray-50 hover:bg-gray-50 transition-colors items-center"
-            >
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
-                  {tx.merchantName ?? tx.description}
-                </p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {format(new Date(tx.date), 'EEE, d MMM yyyy')}
-                  {tx.isPending && (
-                    <span className="ml-2 text-yellow-600 font-medium">Pending</span>
-                  )}
-                </p>
-              </div>
-
-              <div>
-                <CategoryEditor
-                  transactionId={tx.id}
-                  currentCategory={tx.effectiveCategory}
-                  isUserEdited={tx.isUserEdited}
-                />
-              </div>
-
-              <div className="text-xs text-gray-500 truncate">{tx.accountName}</div>
-
-              <div className={`text-sm font-semibold text-right tabular-nums ${
-                tx.direction === 'credit' ? 'text-green-600' : 'text-gray-900'
-              }`}>
-                {tx.direction === 'credit' ? '+' : '-'}$
-                {Math.abs(tx.amount).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
-              </div>
+          <>
+            {/* Mobile card layout */}
+            <div className="lg:hidden divide-y divide-gray-50">
+              {data.transactions.map((tx) => (
+                <div key={tx.id} className="px-4 py-3.5">
+                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                    <p className="text-sm font-medium text-gray-900 leading-snug flex-1 min-w-0 truncate">
+                      {tx.merchantName ?? tx.description}
+                    </p>
+                    <span
+                      className={`text-sm font-semibold tabular-nums flex-shrink-0 ${
+                        tx.direction === 'credit' ? 'text-green-600' : 'text-gray-900'
+                      }`}
+                    >
+                      {tx.direction === 'credit' ? '+' : '-'}$
+                      {Math.abs(tx.amount).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 text-xs text-gray-400 min-w-0">
+                      <span>{format(new Date(tx.date), 'dd MMM')}</span>
+                      <span>·</span>
+                      <span className="truncate">{tx.accountName}</span>
+                      {tx.isPending && <span className="text-yellow-600 font-medium">· Pending</span>}
+                    </div>
+                    <CategoryEditor
+                      transactionId={tx.id}
+                      currentCategory={tx.effectiveCategory}
+                      isUserEdited={tx.isUserEdited}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          ))
+
+            {/* Desktop table layout */}
+            <div className="hidden lg:block">
+              {data.transactions.map((tx) => (
+                <div
+                  key={tx.id}
+                  className="grid grid-cols-[1fr,160px,130px,110px] gap-4 px-5 py-3.5 border-b border-gray-50 hover:bg-gray-50 transition-colors items-center last:border-0"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {tx.merchantName ?? tx.description}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-2">
+                      {format(new Date(tx.date), 'EEE, d MMM yyyy')}
+                      {tx.isPending && <span className="text-yellow-600 font-medium">· Pending</span>}
+                    </p>
+                  </div>
+                  <CategoryEditor
+                    transactionId={tx.id}
+                    currentCategory={tx.effectiveCategory}
+                    isUserEdited={tx.isUserEdited}
+                  />
+                  <div className="text-xs text-gray-500 truncate">{tx.accountName}</div>
+                  <div className={`text-sm font-semibold text-right tabular-nums ${
+                    tx.direction === 'credit' ? 'text-green-600' : 'text-gray-900'
+                  }`}>
+                    {tx.direction === 'credit' ? '+' : '-'}$
+                    {Math.abs(tx.amount).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
