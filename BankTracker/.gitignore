@@ -1,0 +1,25 @@
+# .NET
+backend/BankTracker.API/bin/
+backend/BankTracker.API/obj/
+backend/BankTracker.API/*.db
+backend/BankTracker.API/*.db-shm
+backend/BankTracker.API/*.db-wal
+backend/BankTracker.API/appsettings.*.json
+!backend/BankTracker.API/appsettings.json
+!backend/BankTracker.API/appsettings.Development.json
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# IDEs
+.vs/
+.vscode/
+*.user
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
